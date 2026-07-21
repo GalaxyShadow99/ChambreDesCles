@@ -1,0 +1,31 @@
+info:
+  name: POST-reservations
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8081/api/reservations.php
+  headers:
+    - name: API-KEY
+      value: c5b8df8398de174f8087ea74c2d3080fa9d6bf3076c8c1dbdf625e1fa68fb3a5
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "id_client": 1,
+        "date_debut": "2026-08-01",
+        "date_fin": "2026-08-05",
+        "prix": 250.00,
+        "valide": 1,
+        "plateforme": "A"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

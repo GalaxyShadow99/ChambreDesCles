@@ -1,0 +1,30 @@
+info:
+  name: POST-chambres
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8081/api/chambres.php
+  headers:
+    - name: API-KEY
+      value: c5b8df8398de174f8087ea74c2d3080fa9d6bf3076c8c1dbdf625e1fa68fb3a5
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "nom": "Suite Royale",
+        "prix_nuit": 120.00,
+        "capacite": 2,
+        "description": "Une suite magnifique avec vue panoramique."
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+

@@ -1,96 +1,68 @@
 <?php
-// api/clients.php
-// API - Récupération de tous les clients depuis la base de données
+require_once __DIR__ . '/bootstrap.php';
 
-// 1. Chargement manuel et simple du fichier .env via parse_ini_file() (dossier parent)
-$env = [];
-$envPath = __DIR__ . '/../.env';
-if (file_exists($envPath)) {
-    $env = parse_ini_file($envPath);
-}
+header("Content-Type: application/json; charset=utf-8");
 
-// 2. Récupération de la clé attendue
-$apiSecret = '';
-if (isset($env['API_SECRET_'])) {
-    $apiSecret = $env['API_SECRET_'];
-}
-if (empty($apiSecret) && isset($env['API_SECRET_TOKEN'])) {
-    $apiSecret = $env['API_SECRET_TOKEN'];
-}
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-// 3. Récupération du header Authorization
-$authHeader = '';
-if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-    $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-} elseif (function_exists('getallheaders')) {
-    $headers = getallheaders();
-    if (isset($headers['Authorization'])) {
-        $authHeader = $headers['Authorization'];
-    }
-}
+switch ($method) {
+    case 'GET':
+        if (!empty($_GET['id'])) {
+            // si ID on return UN client spécifique
+            $stmt = $pdo->prepare("SELECT * FROM client WHERE id_client = ?");
+            $stmt->execute([$_GET['id']]);
+            echo json_encode($stmt->fetch() ?: []);
+        } else {
+            // sinon return TOUT les clients
+            echo json_encode($pdo->query("SELECT * FROM client")->fetchAll());
+        }
+        break;
 
-// Extraction du token (retire "Bearer ")
-$receivedToken = '';
-if (strpos($authHeader, 'Bearer ') === 0) {
-    $receivedToken = substr($authHeader, 7);
-}
+    case 'POST':
+        if (empty($_POST['nom']) || empty($_POST['prenom'])) {
+            http_response_code(400);
+            die(json_encode(["message" => "Les champs 'nom' et 'prenom' sont requis"]));
+        }
 
-// Vérification de sécurité avec réponse de debug claire en cas d'erreur
-if ($receivedToken !== $apiSecret) {
-    http_response_code(401);
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode([
-        "error" => "Jeton invalide",
-        "debug" => [
-            "jeton_recu" => $receivedToken,
-            "jeton_attendu" => $apiSecret,
-            "header_complet" => $authHeader
-        ]
-    ]);
-    exit;
-}
+        $stmt = $pdo->prepare("INSERT INTO client (nom, prenom, avis) VALUES (?, ?, ?)");
+        $stmt->execute([
+            $_POST['nom'],
+            $_POST['prenom'],
+            !empty($_POST['avis']) ? $_POST['avis'] : null
+        ]);
+        echo json_encode(["message" => "Client ajouté avec succès"]);
+        break;
 
-// 4. Connexion PDO à la base de données
-$host = 'localhost';
-if (isset($env['DB_HOST'])) {
-    $host = $env['DB_HOST'];
-}
-$port = '3306';
-if (isset($env['DB_PORT'])) {
-    $port = $env['DB_PORT'];
-}
-$dbName = 'chambredescles_db';
-if (isset($env['DB_NAME'])) {
-    $dbName = $env['DB_NAME'];
-}
-$user = 'root';
-if (isset($env['DB_USER'])) {
-    $user = $env['DB_USER'];
-}
-$password = '';
-if (isset($env['DB_PASSWORD'])) {
-    $password = $env['DB_PASSWORD'];
-}
+    case 'PUT':
+        $id = $_GET['id'] ?? $_POST['id_client'] ?? null;
+        if (empty($id) || empty($_POST['nom']) || empty($_POST['prenom'])) {
+            http_response_code(400);
+            die(json_encode(["message" => "L'identifiant, le nom et le prénom sont requis"]));
+        }
 
-try {
-    $dsn = "mysql:host=$host;port=$port;dbname=$dbName;charset=utf8mb4";
-    $pdo = new PDO($dsn, $user, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]);
+        $stmt = $pdo->prepare("UPDATE client SET nom = ?, prenom = ?, avis = ? WHERE id_client = ?");
+        $stmt->execute([
+            $_POST['nom'],
+            $_POST['prenom'],
+            !empty($_POST['avis']) ? $_POST['avis'] : null,
+            $id
+        ]);
+        echo json_encode(["message" => "Client mis à jour avec succès"]);
+        break;
 
-    // Exécution du SELECT * sur la table 'clients'
-    $stmt = $pdo->query("SELECT * FROM clients");
-    $clients = $stmt->fetchAll();
+    case 'DELETE':
+        $id = $_GET['id'] ?? $_POST['id_client'] ?? null;
+        if (empty($id)) {
+            http_response_code(400);
+            die(json_encode(["message" => "Identifiant du client requis"]));
+        }
 
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode($clients, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $stmt = $pdo->prepare("DELETE FROM client WHERE id_client = ?");
+        $stmt->execute([$id]);
+        echo json_encode(["message" => "Client supprimé avec succès"]);
+        break;
 
-} catch (PDOException $e) {
-    http_response_code(500);
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode([
-        "error" => "Erreur de base de données",
-        "message" => $e->getMessage()
-    ]);
+    default:
+        echo json_encode(["message" => "Méthode non autorisée"]);
+        break;
 }
