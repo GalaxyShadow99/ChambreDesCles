@@ -1,0 +1,2 @@
+# Bloquer l'accès web direct au dossier de base de données
+Require all denied

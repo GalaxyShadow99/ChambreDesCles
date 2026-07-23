@@ -1,8 +1,6 @@
--- CREATE DATABASE IF NOT EXISTS `chambres_hotes_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- USE `chambres_hotes_db`;
+-- DROP TABLE IF EXISTS
 DROP TABLE IF EXISTS `reservation`;
 DROP TABLE IF EXISTS `client`;
-
 
 -- Création de la table client
 CREATE TABLE client (
@@ -20,6 +18,6 @@ CREATE TABLE reservation (
     date_fin DATE NOT NULL,
     prix DECIMAL(10, 2) NOT NULL,
     valide BOOLEAN NOT NULL DEFAULT FALSE,
-    plateforme ENUM('A', 'B') NOT NULL,
+    plateforme ENUM('booking', 'airbnb','sans plateforme') NOT NULL,
     FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE CASCADE
 );

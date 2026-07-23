@@ -1,23 +1,11 @@
 <?php
-$env = @parse_ini_file(__DIR__ . '/.env') ?: [];
-$apiSecret = $env['API_SECRET_TOKEN'] ?? '';
-$apiUrl = $env['API_URL'] ?? 'ENV_ERROR';
+require_once __DIR__ . '/utils/db.php';
+require_once __DIR__ . '/utils/clientUtils.php';
+require_once __DIR__ . '/utils/reservationUtils.php';
 
 $tab = ($_GET['tab'] ?? '') === 'clients' ? 'clients' : 'reservations';
 
-$context = stream_context_create([
-    'http' => [
-        'header' => "API-KEY: $apiSecret",
-        'ignore_errors' => true
-    ]
-]);
-
-if($apiUrl === 'ENV_ERROR') {
-    die("Erreur : impossible de lire le fichier .env");
-}
-
-$json = @file_get_contents("$apiUrl/$tab.php", false, $context);
-$data = json_decode($json, true) ?: [];
+$data = ($tab === 'clients') ? getUsers($pdo) : getReservations($pdo);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -41,12 +29,16 @@ $data = json_decode($json, true) ?: [];
         </li>
     </ul>
 
+    <div class="alert alert-secondary py-2 mb-3 small">
+        💡 <em>Astuce : Cliquez sur les en-têtes des colonnes ci-dessous pour trier la table.</em>
+    </div>
+
     <?php if (empty($data)): ?>
         <div class="alert alert-info">Aucun enregistrement trouvé.</div>
     <?php else: ?>
         <?php if ($tab === 'reservations'): ?>
-            <table class="table table-striped table-bordered">
-                <thead class="table-dark">
+            <table class="table table-striped table-bordered table-hover sortable">
+                <thead class="table-dark text-white">
                     <tr>
                         <th>ID</th>
                         <th>Client</th>
@@ -76,8 +68,8 @@ $data = json_decode($json, true) ?: [];
                 </tbody>
             </table>
         <?php else: ?>
-            <table class="table table-striped table-bordered">
-                <thead class="table-dark">
+            <table class="table table-striped table-bordered table-hover sortable">
+                <thead class="table-dark text-white">
                     <tr>
                         <th>ID</th>
                         <th>Nom</th>
@@ -99,6 +91,8 @@ $data = json_decode($json, true) ?: [];
         <?php endif; ?>
     <?php endif; ?>
 </div>
+<!-- pour pouvoir trier les tables -->
+<script src="scripts/sorttable.js"></script>
 
 </body>
 </html>
