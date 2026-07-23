@@ -1,0 +1,53 @@
+services:
+  web:
+    container_name: chambredescles_web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:80'
+    volumes:
+      - ./app:/var/www/html/
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - TZ=Europe/Paris
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - chambredescles_net
+
+  db:
+    container_name: chambredescles_db
+    image: mariadb:10.11
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - DEMO_DATA=${DEMO_DATA:-false}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./app/database/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - ./app/database/script.sql:/app/database/script.sql
+      - ./app/database/demo.sql:/app/database/demo.sql
+    networks:
+      - chambredescles_net
+
+volumes:
+  db_data:
+
+networks:
+  chambredescles_net:
+    driver: bridge
