@@ -1,0 +1,23 @@
+{
+    "name": "thomas/app",
+    "description": "Dashboard pour la gestion de chambres d'hôtes",
+    "type": "project",
+    "require": {
+        "tecnickcom/tc-lib-pdf": "^8.67"
+    },
+    "require-dev": {
+        "tecnickcom/tc-lib-pdf": "^8.67"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Thomas\\App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "CONSTANTIN Thomas",
+            "email": "thomas.constantin27@orange.fr"
+        }
+    ]
+}

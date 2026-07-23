@@ -114,9 +114,12 @@ $tab = 'reservations';
                             <div class="mb-2">
                                 <span class="badge bg-light text-dark border"><?= htmlspecialchars($reservation['plateforme']) ?></span>
                             </div>
-                            <div>
+                            <div class="mb-3">
                                 <?= StatusBadge(['valide' => $reservation['valide']]) ?>
                             </div>
+                            <a href="generatePDF.php?id_reservation=<?= $reservation['id_reservation'] ?>" target="_blank" class="btn btn-sm btn-outline-dark w-100">
+                                Imprimer la facture (PDF)
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ services:
       - '8080:80'
     volumes:
       - ./app:/var/www/html/
+      - ./vendor:/var/www/html/vendor
     env_file:
       - .env
     environment:
@@ -45,6 +46,7 @@ services:
     networks:
       - chambredescles_net
 
+## touche pas au volumes, sinon tu perds la base de données !!
 volumes:
   db_data:
 
