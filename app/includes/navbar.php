@@ -7,15 +7,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link <?= $tab === 'reservations' ? 'active' : '' ?>" href="?tab=reservations">Réservations</a>
+                    <a class="nav-link <?= basename($_SERVER['PHP_SELF']) === 'reservations.php' ? 'active' : '' ?>" href="reservations.php">Réservations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $tab === 'clients' ? 'active' : '' ?>" href="?tab=clients">Clients</a>
+                    <a class="nav-link <?= basename($_SERVER['PHP_SELF']) === 'clients.php' ? 'active' : '' ?>" href="clients.php">Clients</a>
                 </li>
             </ul>
-            <span class="navbar-text text-white-50">
-                Se connecter
-            </span>
+            <a class="btn btn-outline-light btn-sm py-1 px-2" href="logout.php">Déconnexion</a>
         </div>
     </div>
 </nav>

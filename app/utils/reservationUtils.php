@@ -11,27 +11,39 @@ function getReservation($pdo, $id) {
     return $stmt->fetch();
 }
 
-function createReservation($pdo, $data) {
+function getResaEnCours($pdo) {
+    $stmt = $pdo->prepare("SELECT * FROM reservation LEFT JOIN client USING (id_client) WHERE date_fin >= CURDATE() and date_debut <= CURDATE() ORDER BY date_debut ASC");
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+function getResaAVenir($pdo) {
+    $stmt = $pdo->prepare("SELECT * FROM reservation LEFT JOIN client USING (id_client) WHERE date_debut > CURDATE() ORDER BY date_debut ASC");
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+function createReservation($pdo, $id_client, $date_debut, $date_fin, $prix, $valide = FALSE, $plateforme = 'sans plateforme') {
     $stmt = $pdo->prepare("INSERT INTO reservation (id_client, date_debut, date_fin, prix, valide, plateforme) VALUES (?, ?, ?, ?, ?, ?)");
     return $stmt->execute([
-        $data['id_client'],
-        $data['date_debut'],
-        $data['date_fin'],
-        $data['prix'],
-        $data['valide'] ?? FALSE,
-        $data['plateforme'] ?? 'A'
+        $id_client,
+        $date_debut,
+        $date_fin,
+        $prix,
+        $valide,
+        $plateforme
     ]);
 }
 
-function updateReservation($pdo, $id, $data) {
+function updateReservation($pdo, $id, $id_client, $date_debut, $date_fin, $prix, $valide = FALSE, $plateforme = 'sans plateforme') {
     $stmt = $pdo->prepare("UPDATE reservation SET id_client = ?, date_debut = ?, date_fin = ?, prix = ?, valide = ?, plateforme = ? WHERE id_reservation = ?");
     return $stmt->execute([
-        $data['id_client'],
-        $data['date_debut'],
-        $data['date_fin'],
-        $data['prix'],
-        $data['valide'] ?? FALSE,
-        $data['plateforme'] ?? 'A',
+        $id_client  ,
+        $date_debut,
+        $date_fin,
+        $prix,
+        $valide,
+        $plateforme,
         $id
     ]);
 }
@@ -41,4 +53,9 @@ function deleteReservation($pdo, $id) {
     return $stmt->execute([$id]);
 }
 
+function getReservationsByClient($pdo, $id_client) {
+    $stmt = $pdo->prepare("SELECT * FROM reservation WHERE id_client = ?");
+    $stmt->execute([$id_client]);
+    return $stmt->fetchAll();
+}
 ?>

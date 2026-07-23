@@ -11,6 +11,12 @@ function getUser($pdo, $id) {
     return $stmt->fetch();
 }
 
+function getUserDetails($pdo, $id) {
+    $stmt = $pdo->prepare("SELECT * FROM client WHERE id_client = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch();
+}
+
 function createUser($pdo, $nom, $prenom, $avis) {
     $stmt = $pdo->prepare("INSERT INTO client (nom, prenom, avis) VALUES (?, ?, ?)");
     return $stmt->execute([
@@ -20,12 +26,12 @@ function createUser($pdo, $nom, $prenom, $avis) {
     ]);
 }
 
-function updateUser($pdo, $id, $data) {
+function updateUser($pdo, $id, $nom, $prenom, $avis ) {
     $stmt = $pdo->prepare("UPDATE client SET nom = ?, prenom = ?, avis = ? WHERE id_client = ?");
     return $stmt->execute([
-        $data['nom'],
-        $data['prenom'],
-        $data['avis'] ?? null,
+        $nom,
+        $prenom,
+        $avis ?? null,
         $id
     ]);
 }
