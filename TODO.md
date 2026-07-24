@@ -32,8 +32,6 @@ Cette liste regroupe les étapes clés pour transformer l'application actuelle (
 ##  3. Sécurité & Robustesse
 - [x] **Sécurisation des Sessions PHP** :
   - Configurer les paramètres de session dans `auth.php` pour empêcher le vol de session (activer `session.cookie_httponly` et `session.cookie_secure` si HTTPS).
-- [ ] **Variables de production** :
-  - Modifier le fichier `.env` de production avec un couple `ADMIN_LOGIN` / `ADMIN_PASSWORD` hautement sécurisé (au lieu de `admin`/`admin`).
 - [x] **Protection contre les failles CSRF** :
   - Bloquer les requêtes malveillantes avec le paramètre `SameSite=Strict` sur le cookie de session (alternative moderne et légère).
 

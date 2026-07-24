@@ -19,7 +19,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 30s
-      timeout: 5s
+      timeout: 10s
       retries: 3
       start_period: 5s
     restart: unless-stopped
@@ -38,11 +38,38 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - DEMO_DATA=${DEMO_DATA:-false}
+      - TZ=Europe/Paris
     volumes:
       - db_data:/var/lib/mysql
+      # Montage du dossier de sauvegardes en lecture seule
+      - ./backups:/var/backups:ro
       - ./app/database/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
       - ./app/database/script.sql:/app/database/script.sql
       - ./app/database/demo.sql:/app/database/demo.sql
+    networks:
+      - chambredescles_net
+
+  mysql-cron-backup:
+    image: fradelg/mysql-cron-backup:1.15.0
+    container_name: chambredescles_backup
+    restart: unless-stopped
+    depends_on:
+      - db
+    volumes:
+      - ./backups:/backup
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASS=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MAX_BACKUPS=15
+      - INIT_BACKUP=0
+      - USE_PLAIN_SQL=1
+      # Sauvegarde tous les jours à 16:00 
+      - CRON_TIME=30 16 * * *
+      # Option requise MariaDB
+      - MYSQLDUMP_OPTS=--no-tablespaces --skip-ssl
+      - TZ=Europe/Paris
     networks:
       - chambredescles_net
 

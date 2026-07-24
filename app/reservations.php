@@ -17,7 +17,10 @@ $tab = 'reservations';
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h5 mb-0 fw-bold">Gestion des réservations</h2>
-        <a href="createReservation.php" class="btn btn-dark btn-sm fw-medium">Ajouter une réservation</a>
+        <div class="d-flex gap-2">
+            <a href="generateExcel.php" class="btn btn-outline-success btn-sm fw-medium">Exporter Excel</a>
+            <a href="createReservation.php" class="btn btn-dark btn-sm fw-medium">Ajouter une réservation</a>
+        </div>
     </div>
 
     <!-- Infobulle d'astuce utilisateur -->

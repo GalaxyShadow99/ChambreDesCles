@@ -61,7 +61,7 @@ $plateforme = htmlspecialchars($res['plateforme']);
 // Style de couleur dynamique pour le statut
 $status_color = $res['valide'] ? '#047857' : '#b45309';
 $status_bg = $res['valide'] ? '#d1fae5' : '#fef3c7';
-$statut = $res['valide'] ? 'Validée & Confirmée' : 'En attente de paiement';
+$statut = $res['valide'] ? 'Validé & Confirmé' : 'En attente de paiement';
 
 $notes_content = !empty($res['avis']) ? htmlspecialchars($res['avis']) : 'Aucune note particulière pour ce séjour.';
 
