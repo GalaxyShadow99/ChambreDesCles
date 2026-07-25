@@ -1,7 +1,7 @@
 #!/bin/bash
 # init-db.sh - Initialisation de la BDD conditionnelle (Restauration Backup ou Schema/Demo)
 
-DB_CMD="mariadb -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE}"
+DB_CMD="mariadb --default-character-set=utf8mb4 -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE}"
 BACKUP_FILE="/var/backups/latest.${MYSQL_DATABASE}.sql.gz"
 
 if [ -f "$BACKUP_FILE" ]; then

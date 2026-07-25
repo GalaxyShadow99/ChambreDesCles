@@ -11,12 +11,6 @@ function getUser($pdo, $id) {
     return $stmt->fetch();
 }
 
-function getUserDetails($pdo, $id) {
-    $stmt = $pdo->prepare("SELECT * FROM client WHERE id_client = ?");
-    $stmt->execute([$id]);
-    return $stmt->fetch();
-}
-
 function createUser($pdo, $nom, $prenom, $avis) {
     $stmt = $pdo->prepare("INSERT INTO client (nom, prenom, avis) VALUES (?, ?, ?)");
     return $stmt->execute([

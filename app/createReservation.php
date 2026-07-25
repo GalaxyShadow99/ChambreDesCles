@@ -11,7 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($POST['id_client']) && !empty($POST['date_debut']) && !empty($POST['date_fin']) && !empty($POST['prix'])) {
         if ($POST['date_fin'] <= $POST['date_debut']) {
             $error = "La date de fin doit être strictement supérieure à la date de début.";
-        } else {
+        } 
+        elseif($POST["prix"] < 0) {
+            $error = "Le prix ne peut pas être négatif.";
+        }
+        else {
             $res = createReservation(
                 $pdo,
                 (int)$POST['id_client'],

@@ -1,9 +1,10 @@
 FROM php:8.5-apache
 
-# Installation des dépendances système nécessaires pour l'extension zip
+# Installation des dépendances système nécessaires (zip et client MariaDB/MySQL)
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
+    default-mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Installation des extensions PHP requises

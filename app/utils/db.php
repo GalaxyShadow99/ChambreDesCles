@@ -1,6 +1,10 @@
 <?php
 // db.php - Connexion BDD PDO et Fonctions Utilitaires
 
+// Définit le fuseau horaire en se basant sur la variable TZ de Docker (ou Europe/Paris par défaut)
+date_default_timezone_set(getenv('TZ') ?: 'Europe/Paris');
+
+
 $env = @parse_ini_file(__DIR__ . '/../../.env') ?: [];
 
 $host = $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?? $env['DB_HOST'] ?? 'error';

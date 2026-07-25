@@ -9,6 +9,8 @@ services:
     volumes:
       - ./app:/var/www/html/
       - ./vendor:/var/www/html/vendor
+      # Accès au dossier des sauvegardes depuis le conteneur web
+      - ./backups:/var/backups
     env_file:
       - .env
     environment:
@@ -19,7 +21,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 30s
-      timeout: 10s
+      timeout: 5s
       retries: 3
       start_period: 5s
     restart: unless-stopped
@@ -28,7 +30,7 @@ services:
 
   db:
     container_name: chambredescles_db
-    image: mariadb:10.11
+    image: mariadb:11.4
     restart: unless-stopped
     env_file:
       - .env
@@ -41,8 +43,8 @@ services:
       - TZ=Europe/Paris
     volumes:
       - db_data:/var/lib/mysql
-      # Montage du dossier de sauvegardes en lecture seule
-      - ./backups:/var/backups:ro
+      # Montage du dossier de sauvegardes en lecture seule pour la DB
+      - ./backups:/var/backups
       - ./app/database/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
       - ./app/database/script.sql:/app/database/script.sql
       - ./app/database/demo.sql:/app/database/demo.sql
@@ -66,7 +68,7 @@ services:
       - INIT_BACKUP=0
       - USE_PLAIN_SQL=1
       # Sauvegarde tous les jours à 16:00 
-      - CRON_TIME=30 16 * * *
+      - CRON_TIME=30 19 * * *
       # Option requise MariaDB
       - MYSQLDUMP_OPTS=--no-tablespaces --skip-ssl
       - TZ=Europe/Paris

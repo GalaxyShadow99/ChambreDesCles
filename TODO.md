@@ -38,7 +38,24 @@ Cette liste regroupe les étapes clés pour transformer l'application actuelle (
 ---
 
 ##  4. Déploiement & Sauvegardes
-- [ ] **Script de sauvegarde de BDD automatique** :
+- [x] **Script de sauvegarde de BDD automatique** :
   - Écrire un petit script cron ou une commande Docker (`docker exec`) pour exporter régulièrement la base MariaDB (`mysqldump`) dans un dossier de backup sur l'hôte, afin de ne jamais perdre les données des clients.
-- [ ] **Configuration HTTPS** :
+- [X] **Configuration HTTPS** :
   - Mettre en place un reverse proxy simple (comme Caddy ou Nginx avec Let's Encrypt) pour sécuriser l'accès au site avec un certificat SSL gratuit.
+
+---
+
+##  5. Expérience Hôte & Confort (Gestion Clients & Chambre)
+- [ ] **Fiche Client Enrichie & Préférences** :
+  - Ajouter un champ "Préférences & Notes d'accueil" sur la fiche client (ex: oreillers fermes, thé/café, allergies) pour préparer la chambre sur-mesure.
+- [ ] **Checklist interactive de préparation** :
+  - Créer une checklist par réservation (draps propres, serviettes, wifi, dosettes café, eau) à cocher sur téléphone lors de la préparation de la chambre.
+- [ ] **Statistiques ludiques (Fun Stats)** :
+  - Ajouter des indicateurs amusants et visuels sur le dashboard (client le plus fidèle, durée moyenne de séjour, camembert de répartition des plateformes).
+  - [ ] **Module Calendrier** :
+    - Intégrer une vue mensuelle interactive (planning) des séjours en un coup d'œil.
+- [ ] **Automatisation iCal** :
+  - Créer un importateur automatique pour synchroniser les calendriers Airbnb et Booking.com.
+- [ ] **Templates de messages** :
+  - Ajouter des boutons de contact rapide WhatsApp/Mail personnalisés (consignes d'arrivée, de départ, remerciements).
+
