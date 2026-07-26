@@ -89,7 +89,7 @@ $tab = 'reservations';
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="prix" class="form-label fw-semibold small text-secondary">Prix total (€)</label>
-                        <input type="number" step="0.01" class="form-control form-control-sm" id="prix" name="prix" placeholder="ex: 150.00" required>
+                        <input type="number" step="1" class="form-control form-control-sm" id="prix" name="prix" placeholder="ex: 150" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="plateforme" class="form-label fw-semibold small text-secondary">Plateforme</label>

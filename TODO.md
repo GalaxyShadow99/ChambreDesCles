@@ -42,6 +42,9 @@ Cette liste regroupe les étapes clés pour transformer l'application actuelle (
   - Écrire un petit script cron ou une commande Docker (`docker exec`) pour exporter régulièrement la base MariaDB (`mysqldump`) dans un dossier de backup sur l'hôte, afin de ne jamais perdre les données des clients.
 - [X] **Configuration HTTPS** :
   - Mettre en place un reverse proxy simple (comme Caddy ou Nginx avec Let's Encrypt) pour sécuriser l'accès au site avec un certificat SSL gratuit.
+- [ ] **Sécurisation des ports Docker** :
+  - Modifier le mappage des ports dans `docker-compose.yaml` (`127.0.0.1:8080:80`) pour forcer le passage par le reverse proxy HTTPS et bloquer l'accès en clair.
+
 
 ---
 

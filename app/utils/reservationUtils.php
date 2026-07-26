@@ -58,4 +58,23 @@ function getReservationsByClient($pdo, $id_client) {
     $stmt->execute([$id_client]);
     return $stmt->fetchAll();
 }
+
+function GetReservationByPlateforme($pdo, $plateforme) {
+    $stmt = $pdo->prepare("SELECT * FROM reservation WHERE plateforme = ?");
+    $stmt->execute([$plateforme]);
+    return $stmt->fetchAll();
+}
+
+function getReservationCountByPlateforme($pdo, $plateforme) {
+    $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM reservation WHERE plateforme = ?");
+    $stmt->execute([$plateforme]);
+    return $stmt->fetchColumn();
+}
+
+function getReservationAverageDuration($pdo) {
+    $stmt = $pdo->prepare("SELECT ROUND(AVG(DATEDIFF(date_fin, date_debut)),1) as duree_moyenne FROM reservation");
+    $stmt->execute();
+    return $stmt->fetchColumn();
+}
+
 ?>

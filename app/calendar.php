@@ -43,7 +43,7 @@ $tab = 'calendar';
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.11/index.global.min.js"></script>
 
-// style honteusement volé sur la page de payement
+<?php // style honteusement volé sur la page de payement d'une template premium ?>
 <style>
 :root {
     --fc-breezy-border: #e9ecef;

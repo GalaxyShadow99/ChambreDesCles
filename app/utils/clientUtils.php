@@ -44,5 +44,28 @@ function clientExists($pdo, $nom, $prenom) {
     return count($clients) > 0;
 }
 
+function getClientCount($pdo) {
+    $stmt = $pdo->query("SELECT COUNT(*) as count FROM client");
+    $result = $stmt->fetch();
+    return $result['count'];
+}
+
+function getBestClient($pdo) {
+    $sql = <<<SQL
+    SELECT COUNT(*) as NbResa, id_client, nom, prenom
+    FROM client c
+    JOIN reservation r USING(id_client)
+    GROUP BY id_client, nom, prenom
+    HAVING NbResa = (
+        SELECT COUNT(*)
+        FROM reservation
+        GROUP BY id_client
+        ORDER BY COUNT(*) DESC
+        LIMIT 1
+    )
+    SQL;
+
+    return $pdo->query($sql)->fetchAll();
+}
 
 ?>
