@@ -13,6 +13,8 @@ $totalReservations = count($reservationsList);
 
 $totalRevenueValide = 0;
 $totalRevenueNonValide = 0;
+$totalRevenueValide = 0;
+$totalRevenueNonValide = 0;
 $totalRevenue = 0;
 $totalNuites = 0; // Initialisation du compteur de nuitées
 
@@ -20,6 +22,9 @@ foreach ($reservationsList as $res) {
     // Calcul des revenus
     $totalRevenue += $res['prix'];
     if ($res['valide']) {
+        $totalRevenueValide += $res['prix'];
+    } else {
+        $totalRevenueNonValide += $res['prix'];
         $totalRevenueValide += $res['prix'];
     } else {
         $totalRevenueNonValide += $res['prix'];
@@ -61,15 +66,40 @@ $avenir = getResaAVenir($pdo);
                 </h3>
             </div>
         </div>
+    <!-- Ligne de cartes de statistiques - FINANCES -->
+    <div class="row g-4 mb-4">
         <div class="col-md-4">
+            <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
+                <span class="text-secondary small text-uppercase fw-semibold">Revenus Totaux</span>
+                <h3 class="fs-2 fw-bold text-dark mt-2 mb-0">
+                    <?= number_format($totalRevenue, 2, ',', ' ') ?> €
+                </h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
             <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
                 <span class="text-secondary small text-uppercase fw-semibold">Revenus Validés</span>
                 <h3 class="fs-2 fw-bold text-success mt-2 mb-0">
+                    <?= number_format($totalRevenueValide, 2, ',', ' ') ?> €
                     <?= number_format($totalRevenueValide, 2, ',', ' ') ?> €
                 </h3>
             </div>
         </div>
         <div class="col-md-4">
+            <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
+                <span class="text-secondary small text-uppercase fw-semibold">Revenus En Attente</span>
+                <h3 class="fs-2 fw-bold text-warning mt-2 mb-0">
+                    <?= number_format($totalRevenueNonValide, 2, ',', ' ') ?> €
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ligne de cartes de statistiques - ACTIVITÉ -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
             <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
                 <span class="text-secondary small text-uppercase fw-semibold">Revenus En Attente</span>
                 <h3 class="fs-2 fw-bold text-warning mt-2 mb-0">
@@ -172,5 +202,7 @@ $avenir = getResaAVenir($pdo);
 </div>
 
 <?php include_once __DIR__ . '/includes/footer.php'; ?>
+</body>
+</html>
 </body>
 </html>
