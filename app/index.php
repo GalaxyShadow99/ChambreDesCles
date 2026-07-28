@@ -9,6 +9,7 @@ require_once __DIR__ . '/includes/components.php';
 $clientsList = getUsers($pdo);
 $reservationsList = getReservations($pdo);
 $totalClients = count($clientsList); // On peut le garder en mémoire même s'il n'est plus affiché
+$totalClients = count($clientsList); // On peut le garder en mémoire même s'il n'est plus affiché
 $totalReservations = count($reservationsList);
 
 $totalRevenueValide = 0;
@@ -16,7 +17,11 @@ $totalRevenueNonValide = 0;
 $totalRevenue = 0;
 $totalNuites = 0; // Initialisation du compteur de nuitées
 
+$totalNuites = 0; // Initialisation du compteur de nuitées
+
 foreach ($reservationsList as $res) {
+    // Calcul des revenus
+    $totalRevenue += $res['prix'];
     // Calcul des revenus
     $totalRevenue += $res['prix'];
     if ($res['valide']) {
@@ -24,6 +29,11 @@ foreach ($reservationsList as $res) {
     } else {
         $totalRevenueNonValide += $res['prix'];
     }
+
+    // Calcul des nuitées pour cette réservation
+    $start = new DateTime($res['date_debut']);
+    $end = new DateTime($res['date_fin']);
+    $totalNuites += $start->diff($end)->days;
 
     // Calcul des nuitées pour cette réservation
     $start = new DateTime($res['date_debut']);
@@ -92,7 +102,12 @@ $avenir = getResaAVenir($pdo);
         <div class="col-md-6">
             <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
                 <span class="text-secondary small text-uppercase fw-semibold">Nombre total de nuitées</span>
+        <div class="col-md-6">
+            <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
+                <span class="text-secondary small text-uppercase fw-semibold">Nombre total de nuitées</span>
                 <h3 class="fs-2 fw-bold text-dark mt-2 mb-0">
+                    <!-- Affichage de la nouvelle variable calculée -->
+                    <?= $totalNuites ?>
                     <!-- Affichage de la nouvelle variable calculée -->
                     <?= $totalNuites ?>
                 </h3>
