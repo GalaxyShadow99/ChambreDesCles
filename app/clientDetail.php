@@ -49,7 +49,7 @@ $tab = 'clients';
 
 <div class="container">
     <div class="mb-4">
-        <a href="index.php?tab=clients" class="btn btn-outline-secondary btn-sm">
+        <a href="clients.php?tab=clients" class="btn btn-outline-secondary btn-sm">
             ← Retour à la liste des clients
         </a>
     </div>

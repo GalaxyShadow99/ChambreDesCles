@@ -6,7 +6,6 @@ require_once __DIR__ . '/utils/reservationUtils.php';
 require_once __DIR__ . '/includes/components.php';
 
 $id_reservation = isset($_GET['id_reservation']) ? (int)$_GET['id_reservation'] : null;
-
 $reservation = null;
 $clients = [];
 $success = isset($_GET['success']) ? "Les informations de la réservation ont été mises à jour." : null;
@@ -41,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $valide,
                 $plateforme
             );
-
             if ($updateOk) {
                 header("Location: reservationDetail.php?id_reservation=" . $id_reservation . "&success=1");
                 exit;
@@ -60,13 +58,12 @@ $tab = 'reservations';
 <html lang="fr">
 <?php include_once __DIR__ . '/includes/head.php'; ?>
 <body class="bg-light">
-
 <?php include_once __DIR__ . '/includes/navbar.php'; ?>
 
 <div class="container d-flex flex-column align-items-center">
     <div class="w-100" style="max-width: 700px;">
         <div class="mb-4">
-            <a href="index.php?tab=reservations" class="btn btn-outline-secondary btn-sm">
+            <a href="reservations.php?tab=reservations" class="btn btn-outline-secondary btn-sm">
                 ← Retour à la liste des réservations
             </a>
         </div>
@@ -77,7 +74,6 @@ $tab = 'reservations';
                 <p class="mb-0">Le numéro de réservation spécifié n'existe pas ou a été supprimé.</p>
             </div>
         <?php else: ?>
-
             <?php if ($success): ?>
                 <div class="alert alert-success alert-dismissible fade show border-0 bg-success-subtle text-success-emphasis py-2 px-3 mb-4 small" role="alert">
                     <?= htmlspecialchars($success) ?>
@@ -117,9 +113,6 @@ $tab = 'reservations';
                             <div class="mb-3">
                                 <?= StatusBadge(['valide' => $reservation['valide']]) ?>
                             </div>
-                            <a href="generatePDF.php?id_reservation=<?= $reservation['id_reservation'] ?>" target="_blank" class="btn btn-sm btn-outline-dark w-100">
-                                Imprimer la facture (PDF)
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -133,7 +126,7 @@ $tab = 'reservations';
                                 Modifier
                             </button>
                         </div>
-
+                        
                         <div class="row gy-3 small text-secondary mb-2" id="infoLecture">
                             <div class="col-sm-6"><strong class="text-dark">Arrivée</strong><br><?= htmlspecialchars($reservation['date_debut']) ?></div>
                             <div class="col-sm-6">
@@ -155,6 +148,7 @@ $tab = 'reservations';
                             <hr class="my-3" style="border-color: #d0d7de;">
                             <form method="POST" action="reservationDetail.php?id_reservation=<?= $id_reservation ?>">
                                 <input type="hidden" name="action" value="modifier">
+                                
                                 <div class="mb-3">
                                     <label for="id_client" class="form-label small fw-semibold text-dark">Associer au client <span class="text-danger">*</span></label>
                                     <select name="id_client" id="id_client" class="form-select form-select-sm" required>
@@ -165,6 +159,7 @@ $tab = 'reservations';
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-sm-6 mb-3">
                                         <label class="form-label small fw-semibold text-dark">Date de début <span class="text-danger">*</span></label>
@@ -175,6 +170,7 @@ $tab = 'reservations';
                                         <input type="date" name="date_fin" class="form-control form-control-sm" value="<?= htmlspecialchars($reservation['date_fin']) ?>" required>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-sm-6 mb-3">
                                         <label class="form-label small fw-semibold text-dark">Montant (€) <span class="text-danger">*</span></label>
@@ -189,10 +185,12 @@ $tab = 'reservations';
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" name="valide" class="form-check-input" id="valide" value="1" <?= $reservation['valide'] ? 'checked' : '' ?>>
                                     <label class="form-check-label small fw-semibold text-dark" for="valide">Réservation validée</label>
                                 </div>
+
                                 <div class="col-12 d-flex gap-2">
                                     <button type="submit" class="btn btn-dark btn-sm fw-medium">
                                         Enregistrer les modifications
@@ -203,6 +201,7 @@ $tab = 'reservations';
                                 </div>
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -211,3 +210,5 @@ $tab = 'reservations';
 </div>
 
 <?php include_once __DIR__ . '/includes/footer.php'; ?>
+</body>
+</html>
