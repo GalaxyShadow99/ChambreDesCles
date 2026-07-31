@@ -12,7 +12,7 @@ function getReservation($pdo, $id) {
 }
 
 function getResaEnCours($pdo) {
-    $stmt = $pdo->prepare("SELECT * FROM reservation LEFT JOIN client USING (id_client) WHERE date_fin >= CURDATE() and date_debut <= CURDATE() ORDER BY date_debut ASC");
+    $stmt = $pdo->prepare("SELECT * FROM reservation LEFT JOIN client USING (id_client) WHERE date_fin > CURDATE() and date_debut <= CURDATE() ORDER BY date_debut ASC");
     $stmt->execute();
     return $stmt->fetchAll();
 }

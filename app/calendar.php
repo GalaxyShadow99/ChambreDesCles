@@ -173,11 +173,11 @@ document.addEventListener('DOMContentLoaded', function() {
         themeSystem: 'bootstrap5',
         
         initialView: 'dayGridMonth',
-        locale: 'fr', // Traduction française automatique
-        firstDay: 1,  // Lundi premier jour de la semaine
-        editable: false, // Désactive le drag & drop pour éviter les erreurs de manipulation
-        eventOverlap: false, // Empêche le chevauchement des barres de séjour sur la même ligne
-        height: 'auto', // Ajuste la hauteur automatiquement sans double scrollbar
+        locale: 'fr',
+        firstDay: 1,
+        editable: false,
+        eventOverlap: false,
+        height: 'auto',
         
         headerToolbar: {
             left: 'prev,next today',
@@ -195,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         displayEventTime: false, 
 
         eventDidMount: function(info) {
+            // 1. Initialisation de l'infobulle (votre code existant)
             const props = info.event.extendedProps;
             const content = `
                 <strong>${info.event.title}</strong><br>
@@ -203,7 +204,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <strong>Montant :</strong> ${props.prix}
             `;
             
-            // Initialisation de l'infobulle Bootstrap 5 native
             new bootstrap.Tooltip(info.el, {
                 title: content,
                 html: true,
@@ -211,6 +211,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 trigger: 'hover',
                 container: 'body'
             });
+
+            // 2. GESTION DES DEMI-JOURNÉES (Arrivées et Départs)
+            // On récupère la largeur d'une case jour du calendrier
+            const dayCell = document.querySelector('.fc-daygrid-day');
+            if (dayCell) {
+                // On calcule la moitié de la case
+                const halfCellWidth = (dayCell.offsetWidth / 2) + 'px';
+                
+                // Si c'est le jour de début (Arrivée en fin de journée)
+                if (info.isStart) {
+                    info.el.style.marginLeft = halfCellWidth;
+                    info.el.classList.add('is-checkin'); // Pour le CSS
+                }
+                
+                // Si c'est le jour de fin (Départ le matin)
+                if (info.isEnd) {
+                    info.el.style.marginRight = halfCellWidth;
+                    info.el.classList.add('is-checkout'); // Pour le CSS
+                }
+            }
         },
         
         eventClick: function(info) {
@@ -218,6 +238,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = info.event.url;
                 info.jsEvent.preventDefault();
             }
+        },
+
+        // Si l'utilisateur redimensionne la fenêtre, on relance le rendu pour recalculer les marges
+        windowResize: function() {
+            calendar.render();
         }
     });
     calendar.render();
