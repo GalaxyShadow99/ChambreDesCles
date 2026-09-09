@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 error_reporting(E_ALL & ~E_NOTICE);
 
+require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/composer_autoload.php';
 require_once __DIR__ . '/utils/db.php';
 require_once __DIR__ . '/utils/reservationUtils.php';

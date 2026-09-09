@@ -14,16 +14,7 @@ $user = $_ENV['DB_USER'] ?? getenv('DB_USER') ?? $env['DB_USER'] ?? 'error';
 $pass = $_ENV['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?? $env['DB_PASSWORD'] ?? 'error';
 
 if ($host === 'error' || $port === 'error' || $db === 'error' || $user === 'error' || $pass === 'error') {
-    echo "<pre>";
-    print_r([
-        'DB_HOST' => $host,
-        'DB_PORT' => $port,
-        'DB_NAME' => $db,
-        'DB_USER' => $user,
-        'DB_PASSWORD' => $pass
-    ]);
-    echo "</pre>";
-    die("Erreur BDD : Fichier .env manquant ou incomplet");
+    die("Erreur BDD : Fichier .env manquant ou incomplet.");
 }
 
 try {

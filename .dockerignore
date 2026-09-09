@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env
+.env.example
+backups/
+docker-compose.yaml
+dropDB.sh
+start.sh
+stop.sh
+README.md
+TODO.md
+LICENSE

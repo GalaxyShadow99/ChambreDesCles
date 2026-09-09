@@ -1,3 +1,10 @@
+<?php
+if (!headers_sent()) {
+    header("X-Frame-Options: DENY");
+    header("X-Content-Type-Options: nosniff");
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+}
+?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

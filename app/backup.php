@@ -24,7 +24,14 @@ if (!empty($_SESSION['restore_file'])) {
     if (!file_exists($filePath)) {
         $error = "Le fichier de sauvegarde spécifié n'existe pas.";
     } else {
-        $cmd = "mariadb --skip-ssl -h $host -u $user -p$pass $db < $filePath 2>&1";
+        $cmd = sprintf(
+            "mariadb --skip-ssl -h %s -u %s -p%s %s < %s 2>&1",
+            escapeshellarg($host),
+            escapeshellarg($user),
+            escapeshellarg($pass),
+            escapeshellarg($db),
+            escapeshellarg($filePath)
+        );
         $output = [];
         $returnVar = 0;
         exec($cmd, $output, $returnVar);
@@ -55,7 +62,14 @@ if (!empty($_SESSION['newBackupFileName'])) {
         $error = "Le fichier de sauvegarde spécifié existe déjà.";
     } else {
         // Correction : utilise $selectedFile au lieu de la variable de session qui vient d'être unset
-        $cmd = "mariadb-dump -h $host -u $user -p$pass $db > /var/backups/$selectedFile 2>&1";
+        $cmd = sprintf(
+            "mariadb-dump -h %s -u %s -p%s %s > %s 2>&1",
+            escapeshellarg($host),
+            escapeshellarg($user),
+            escapeshellarg($pass),
+            escapeshellarg($db),
+            escapeshellarg($filePath)
+        );
         $output = [];
         $returnVar = 0;
         exec($cmd, $output, $returnVar);

@@ -4,8 +4,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-##    ports:
-##      - '8080:80'
+    ports:
+      - '8083:80'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     volumes:
       - ./app:/var/www/html/
       - ./vendor:/var/www/html/vendor
@@ -17,22 +22,27 @@ services:
       - DB_HOST=db
       - TZ=Europe/Paris
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 30s
-      timeout: 5s
-      retries: 3
+      timeout: 10s
+      retries: 5
       start_period: 5s
     restart: unless-stopped
     networks:
       - chambredescles_net
-      - npm-network
 
   db:
     container_name: chambredescles_db
     image: mariadb:11.4
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "25m"
+        max-file: "3"
     env_file:
       - .env
     environment:
@@ -42,6 +52,11 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - DEMO_DATA=${DEMO_DATA:-false}
       - TZ=Europe/Paris
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     volumes:
       - db_data:/var/lib/mysql
       # Montage du dossier de sauvegardes en lecture seule pour la DB
@@ -56,8 +71,19 @@ services:
     image: fradelg/mysql-cron-backup:1.15.0
     container_name: chambredescles_backup
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep cron || pgrep crond || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     volumes:
       - ./backups:/backup
     environment:
@@ -68,7 +94,7 @@ services:
       - MAX_BACKUPS=15
       - INIT_BACKUP=0
       - USE_PLAIN_SQL=1
-      # Sauvegarde tous les jours à 16:00 
+      # Sauvegarde tous les jours à 19:30 
       - CRON_TIME=30 19 * * *
       # Option requise MariaDB
       - MYSQLDUMP_OPTS=--no-tablespaces --skip-ssl
@@ -83,5 +109,3 @@ volumes:
 networks:
   chambredescles_net:
     driver: bridge
-  npm-network:
-    external: true

@@ -8,32 +8,22 @@ require_once __DIR__ . '/includes/components.php';
 // Calcul des indicateurs clés pour le dashboard
 $clientsList = getUsers($pdo);
 $reservationsList = getReservations($pdo);
-$totalClients = count($clientsList); // On peut le garder en mémoire même s'il n'est plus affiché
-$totalClients = count($clientsList); // On peut le garder en mémoire même s'il n'est plus affiché
+$totalClients = count($clientsList);
 $totalReservations = count($reservationsList);
 
 $totalRevenueValide = 0;
 $totalRevenueNonValide = 0;
 $totalRevenue = 0;
-$totalNuites = 0; // Initialisation du compteur de nuitées
-
-$totalNuites = 0; // Initialisation du compteur de nuitées
+$totalNuites = 0;
 
 foreach ($reservationsList as $res) {
     // Calcul des revenus
     $totalRevenue += $res['prix'];
-    // Calcul des revenus
-    $totalRevenue += $res['prix'];
-    if ($res['valide']) {
+    if (!empty($res['valide'])) {
         $totalRevenueValide += $res['prix'];
     } else {
         $totalRevenueNonValide += $res['prix'];
     }
-
-    // Calcul des nuitées pour cette réservation
-    $start = new DateTime($res['date_debut']);
-    $end = new DateTime($res['date_fin']);
-    $totalNuites += $start->diff($end)->days;
 
     // Calcul des nuitées pour cette réservation
     $start = new DateTime($res['date_debut']);
@@ -95,21 +85,15 @@ $avenir = getResaAVenir($pdo);
             <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
                 <span class="text-secondary small text-uppercase fw-semibold">Total Réservations</span>
                 <h3 class="fs-2 fw-bold text-dark mt-2 mb-0">
-                    <?= $totalReservations ?>
+                    <?= (int)$totalReservations ?>
                 </h3>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
                 <span class="text-secondary small text-uppercase fw-semibold">Nombre total de nuitées</span>
-        <div class="col-md-6">
-            <div class="card p-4 border-0 text-center shadow-sm" style="border: 1px solid #d0d7de !important; border-radius: 6px; background-color: #ffffff;">
-                <span class="text-secondary small text-uppercase fw-semibold">Nombre total de nuitées</span>
                 <h3 class="fs-2 fw-bold text-dark mt-2 mb-0">
-                    <!-- Affichage de la nouvelle variable calculée -->
-                    <?= $totalNuites ?>
-                    <!-- Affichage de la nouvelle variable calculée -->
-                    <?= $totalNuites ?>
+                    <?= (int)$totalNuites ?>
                 </h3>
             </div>
         </div>
@@ -157,21 +141,21 @@ $avenir = getResaAVenir($pdo);
                     </thead>
                     <tbody>
                         <?php foreach ($reservations as $res): ?>
-                            <tr style="cursor: pointer;" onclick="window.location.href='reservationDetail.php?id_reservation=<?= $res['id_reservation'] ?>'">
-                                <td class="text-end font-monospace text-muted"><?= $res['id_reservation'] ?></td>
+                            <tr style="cursor: pointer;" onclick="window.location.href='reservationDetail.php?id_reservation=<?= (int)$res['id_reservation'] ?>'">
+                                <td class="text-end font-monospace text-muted"><?= (int)$res['id_reservation'] ?></td>
                                 <td class="text-start fw-semibold">
-                                    <a href="clientDetail.php?id_client=<?= $res['id_client'] ?>" class="text-decoration-none text-dark link-primary" onclick="event.stopPropagation();">
+                                    <a href="clientDetail.php?id_client=<?= (int)$res['id_client'] ?>" class="text-decoration-none text-dark link-primary" onclick="event.stopPropagation();">
                                         <?= htmlspecialchars(($res['prenom'] ?? '') . ' ' . ($res['nom'] ?? '')) ?>
                                     </a>
                                 </td>
-                                <td class="text-start"><?= date('d/m/Y', strtotime($res['date_debut'])) ?></td>
+                                <td class="text-start"><?= htmlspecialchars(date('d/m/Y', strtotime($res['date_debut']))) ?></td>
                                 <td class="text-start">
-                                    <?= date('d/m/Y', strtotime($res['date_fin'])) ?>
+                                    <?= htmlspecialchars(date('d/m/Y', strtotime($res['date_fin']))) ?>
                                     <?php
                                     $start = new DateTime($res['date_debut']);
                                     $end = new DateTime($res['date_fin']);
                                     $diff = $start->diff($end)->days;
-                                    echo '<span class="text-muted small">(Nombre de nuitées ' . $diff . ' j)</span>';
+                                    echo '<span class="text-muted small">(Nombre de nuitées ' . (int)$diff . ' j)</span>';
                                     ?>
                                 </td>
                                 <td class="text-end fw-semibold"><?= number_format($res['prix'], 2, ',', ' ') ?> €</td>

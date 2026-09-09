@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if ($password === $adminPassword) {
+        session_regenerate_id(true);
         $_SESSION['logged_in'] = true;
         header('Location: index.php');
         exit;

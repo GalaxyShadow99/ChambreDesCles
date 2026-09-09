@@ -3,6 +3,7 @@
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 ini_set('display_errors', 0);
 
+require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/composer_autoload.php';
 require_once __DIR__ . '/utils/db.php';
 require_once __DIR__ . '/utils/reservationUtils.php';
