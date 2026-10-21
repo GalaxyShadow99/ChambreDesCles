@@ -6,7 +6,7 @@
 
 Le projet est développé en PHP natif, utilise **Dompdf** pour la génération de PDF, et inclut un environnement Docker minimal pour faciliter le déploiement.
 
----
+--- 
 
 ## Fonctionnalités
 
