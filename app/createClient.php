@@ -34,7 +34,7 @@ $tab = 'clients';
     <div class="w-100" style="max-width: 500px;">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="h5 mb-0 fw-bold">Créer un client</h2>
-            <a href="index.php?tab=clients" class="btn btn-outline-secondary btn-sm">Retour</a>
+            <a href="clients.php?tab=clients" class="btn btn-outline-secondary btn-sm">Retour</a>
         </div>
 
         <?php 
